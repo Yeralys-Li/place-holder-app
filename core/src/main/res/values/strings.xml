@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="http_error_default">Algo salió mal. Verifique su conexión de red y vuelva a intentarlo.</string>
+</resources>

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cu.lidev.placeholderapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".PlaceHolderApp"
         android:allowBackup="true"
