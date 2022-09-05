@@ -1,5 +1,6 @@
 package cu.lidev.core.common.network
 
+import cu.lidev.core.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,9 +46,9 @@ internal object NetworkModule {
             .connectTimeout(TIME_OUT_CONNECT, TimeUnit.SECONDS)
             .writeTimeout(TIME_OUT_WRITE, TimeUnit.SECONDS)
             .readTimeout(TIME_OUT_READ, TimeUnit.SECONDS)
-//            .apply {
-//                if (BuildConfing.DEBUG) addInterceptor(loggingInterceptor)
-//            }
+            .apply {
+                if (BuildConfig.DEBUG) addInterceptor(loggingInterceptor)
+            }
             .build()
     }
 
@@ -55,6 +56,9 @@ internal object NetworkModule {
     @Provides
     fun provideHttpLoggingInterceptor() = HttpLoggingInterceptor()
         .apply { level = HttpLoggingInterceptor.Level.BODY }
+
+    @Provides
+    fun provideRequestHandler(): RequestHandler = RequestHandlerImpl()
 
 
 }
