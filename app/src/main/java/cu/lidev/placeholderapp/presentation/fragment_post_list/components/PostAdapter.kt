@@ -3,10 +3,11 @@ package cu.lidev.placeholderapp.presentation.fragment_post_list.components
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import cu.lidev.core.common.util.OnItemClickListener
 import cu.lidev.placeholderapp.databinding.ItemPostBinding
 import cu.lidev.placeholderapp.domain.model.Post
 
-class PostAdapter() :
+class PostAdapter(val itemClickListener: OnItemClickListener<Post>? = null) :
     RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private var items = listOf<Post>()
@@ -34,6 +35,14 @@ class PostAdapter() :
 
     inner class ViewHolder(val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            itemView.setOnClickListener {
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    itemClickListener?.onClick(getItem(bindingAdapterPosition))
+                }
+            }
+        }
 
         fun bind(post: Post) = binding.run {
             title.text = post.title

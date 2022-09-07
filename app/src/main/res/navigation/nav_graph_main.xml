@@ -9,7 +9,39 @@
         android:id="@+id/postListFragment"
         android:name="cu.lidev.placeholderapp.presentation.fragment_post_list.PostListFragment"
         android:label="PostListFragment"
-        tools:layout="@layout/fragment_post_list" />
+        tools:layout="@layout/fragment_post_list">
+        <action
+            android:id="@+id/navigate_to_comments"
+            app:destination="@id/commentsPostFragment">
+
+            <argument
+                android:name="post"
+                app:argType="cu.lidev.placeholderapp.domain.model.Post"
+                app:nullable="false" />
+
+        </action>
+        <action
+            android:id="@+id/navigate_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentsPostFragment"
+        android:name="cu.lidev.placeholderapp.presentation.fragment_comments_data.CommentsPostFragment"
+        android:label="CommentsPostFragment"
+        tools:layout="@layout/fragment_comments_post">
+
+        <argument
+            android:name="post"
+            app:argType="cu.lidev.placeholderapp.domain.model.Post"
+            app:nullable="false" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="cu.lidev.placeholderapp.presentation.fragment_contacts.ContactsFragment"
+        android:label="ContactsFragment"
+        tools:layout="@layout/fragment_contacts" />
 
 
 </navigation>
