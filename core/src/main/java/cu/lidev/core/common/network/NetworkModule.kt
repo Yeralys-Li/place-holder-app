@@ -29,7 +29,7 @@ internal object NetworkModule {
         converterFactory: Converter.Factory,
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl("https://jsonplaceholder.typicode.com")
+            .baseUrl("https://jsonplaceholder.typicode.com/")
             .addConverterFactory(converterFactory)
             .client(okHttpClient)
             .build()
