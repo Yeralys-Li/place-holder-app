@@ -4,6 +4,11 @@
     <string name="permission_granted">Permission Granted</string>
     <string name="comments">Comments</string>
     <string name="permission_required">Permission Required</string>
+    <string name="permission_required_message">The permission to read the contacts is required for the correct functioning of the application</string>
     <string name="accept">Accept</string>
     <string name="contacts">Contacts</string>
+    <string name="setting">Go to Setting</string>
+    <string name="cancel">Cancel</string>
+
+
 </resources>

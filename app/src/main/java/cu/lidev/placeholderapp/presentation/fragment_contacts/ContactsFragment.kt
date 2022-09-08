@@ -2,8 +2,11 @@ package cu.lidev.placeholderapp.presentation.fragment_contacts
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cu.lidev.core.common.util.*
+import cu.lidev.placeholderapp.R
 import cu.lidev.placeholderapp.databinding.FragmentContactsBinding
 import cu.lidev.placeholderapp.domain.model.Contact
 import cu.lidev.placeholderapp.presentation.fragment_contacts.components.ContactAdapter
@@ -45,9 +49,16 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
             if (isAllGranted) {
                 readContacts()
             } else {
-                checkPermissions()
+                checkPermission()
             }
         }
+
+    //Setting application
+    private val requestSetting =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            checkPermission()
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +92,7 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
     }
 
 
-    private fun checkPermissions(): Boolean {
+    private fun checkPermissionsIsGranted(): Boolean {
         val permission1 = ContextCompat.checkSelfPermission(
             requireContext(),
             permissionReadContact
@@ -95,25 +106,32 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
     }
 
     private fun shouldShowRequestPermissionRationales(): Boolean {
-        val permission1 = ActivityCompat.shouldShowRequestPermissionRationale(
+        return ActivityCompat.shouldShowRequestPermissionRationale(
             requireActivity(),
             permissionReadContact
         )
-        val permission2 = ActivityCompat.shouldShowRequestPermissionRationale(
-            requireActivity(),
-            permissionWriteContact
-        )
-
-        return permission1 && permission2
     }
 
     private fun checkPermission() {
         when {
-            checkPermissions() -> {
+            checkPermissionsIsGranted() -> {
                 readContacts()
             }
             shouldShowRequestPermissionRationales() -> {
-
+                alertDialog(
+                    context = requireContext(),
+                    title = R.string.permission_required,
+                    message = R.string.permission_required_message,
+                    isCancelable = false,
+                    positiveText = R.string.setting,
+                    negativeText = R.string.cancel,
+                    negativeListener = { _, _ ->
+                        findNavController().popBackStack()
+                    },
+                    positiveListener = { _, _ ->
+                        toAppInformation()
+                    }
+                ).show()
             }
             else -> {
                 requestPermissionsLauncher.launch(
@@ -155,6 +173,16 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
     override fun onClick(model: Contact, position: Int?) {
         viewModel.deleteContact(requireContext().contentResolver, model.name)
         position?.let { (binding.recycler.adapter as ContactAdapter).deleteItem(it) }
+    }
+
+    private fun toAppInformation() {
+        requestSetting.launch(
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            ).apply {
+                data = Uri.fromParts("package", requireActivity().packageName, null)
+            }
+        )
     }
 
 }

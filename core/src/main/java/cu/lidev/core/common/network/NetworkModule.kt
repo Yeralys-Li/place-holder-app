@@ -17,7 +17,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
 
-    private const val MAX_REQUEST_COUNT = 8
     private const val TIME_OUT_CONNECT = 25L
     private const val TIME_OUT_WRITE = 25L
     private const val TIME_OUT_READ = 25L
