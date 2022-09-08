@@ -9,6 +9,8 @@
     <string name="contacts">Contacts</string>
     <string name="setting">Go to Setting</string>
     <string name="cancel">Cancel</string>
+    <string name="delete_contact">Delete contact</string>
+    <string name="delete_contact_message">Are you sure you want to delete this contact?</string>
 
 
 </resources>

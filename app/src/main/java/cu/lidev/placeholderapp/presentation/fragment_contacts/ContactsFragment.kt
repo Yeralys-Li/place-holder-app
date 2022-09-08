@@ -42,7 +42,6 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
         ) { permissions ->
             var isAllGranted = false
             permissions.entries.forEach {
-                val permissionName = it.key
                 val isGranted = it.value
                 isAllGranted = isGranted
             }
@@ -143,7 +142,7 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
 
     @SuppressLint("SetTextI18n")
     private fun subscribeUi() {
-        viewModel.data.observe(viewLifecycleOwner) { it ->
+        viewModel.data.observe(viewLifecycleOwner) {
             loadingDialog?.dismiss()
             binding.apply {
                 total.text = "Total " + it.size.toString()
@@ -171,8 +170,20 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
     }
 
     override fun onClick(model: Contact, position: Int?) {
-        viewModel.deleteContact(requireContext().contentResolver, model.name)
-        position?.let { (binding.recycler.adapter as ContactAdapter).deleteItem(it) }
+        alertDialog(
+            context = requireContext(),
+            title = R.string.delete_contact,
+            message = R.string.delete_contact_message,
+            positiveText = R.string.accept,
+            negativeText = R.string.cancel,
+            positiveListener = { _, _ ->
+                viewModel.deleteContact(requireContext().contentResolver, model.name)
+                position?.let { (binding.recycler.adapter as ContactAdapter).deleteItem(it) }
+            },
+            negativeListener = null,
+            isCancelable = true
+        ).show()
+
     }
 
     private fun toAppInformation() {
