@@ -8,15 +8,14 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:liftOnScroll="true">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
             app:navigationIcon="@drawable/ic_round_arrow_back_24"
             android:layout_height="match_parent"
             app:title="@string/comments" />

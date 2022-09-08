@@ -131,6 +131,7 @@ class ContactsViewModel : ViewModel() {
 
         // Delete raw_contacts table related data.
         contentR.delete(contactUri, contactWhereClause.toString(), null)
+        getAll(contentR)
     }
 
     @SuppressLint("Range")
