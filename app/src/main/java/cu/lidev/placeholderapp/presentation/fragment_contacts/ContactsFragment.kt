@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -71,6 +72,9 @@ class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
 
 
     private fun initUI() {
+        requireActivity().onBackPressedDispatcher.addCallback {
+            findNavController().popBackStack()
+        }
         binding.apply {
             toolbar.setNavigationOnClickListener {
                 findNavController().popBackStack()
