@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     app:cardElevation="4dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="8dp">
@@ -15,9 +17,8 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/name"
             style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@tools:sample/lorem" />
@@ -25,12 +26,24 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/phone"
             style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"
             tools:text="@tools:sample/us_phones" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/delete"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="@dimen/dim_margin"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="#777777"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_round_delete_24" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

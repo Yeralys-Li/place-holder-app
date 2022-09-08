@@ -97,7 +97,7 @@ class PostListFragment : Fragment(), OnItemClickListener<Post> {
         binding.refresh.isRefreshing = isRefresh
     }
 
-    override fun onClick(model: Post) {
+    override fun onClick(model: Post, position: Int?) {
         findNavController().navigate(PostListFragmentDirections.navigateToComments(model))
     }
 

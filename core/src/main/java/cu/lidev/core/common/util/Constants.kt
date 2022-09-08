@@ -6,3 +6,4 @@ const val TAG = "placeHolder/dev"
 
 //Permission
 const val permissionReadContact = Manifest.permission.READ_CONTACTS
+const val permissionWriteContact = Manifest.permission.WRITE_CONTACTS

@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,37 +17,35 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import cu.lidev.core.common.util.RecyclerDecoration
-import cu.lidev.core.common.util.permissionReadContact
-import cu.lidev.core.common.util.progressDialog
+import cu.lidev.core.common.util.*
 import cu.lidev.placeholderapp.databinding.FragmentContactsBinding
 import cu.lidev.placeholderapp.domain.model.Contact
 import cu.lidev.placeholderapp.presentation.fragment_contacts.components.ContactAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-private val FROM_COLUMNS: Array<String> = arrayOf(
-    ContactsContract.Contacts.DISPLAY_NAME
-)
-
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(), OnItemClickListener<Contact> {
 
     private lateinit var _binding: FragmentContactsBinding
     private val binding get() = _binding
     private val viewModel: ContactsViewModel by viewModels()
 
-    private val contacts = arrayListOf<Contact>()
     private var loadingDialog: Dialog? = null
 
-    private val requestPermissionLauncher =
+    private val requestPermissionsLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                Log.i("Permission: ", "Granted")
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            var isAllGranted = false
+            permissions.entries.forEach {
+                val permissionName = it.key
+                val isGranted = it.value
+                isAllGranted = isGranted
+            }
+            if (isAllGranted) {
                 readContacts()
             } else {
-                Log.i("Permission: ", "Denied")
+                checkPermissions()
             }
         }
 
@@ -78,29 +74,51 @@ class ContactsFragment : Fragment() {
                         columns = 1
                     )
                 )
-                adapter = ContactAdapter()
+                adapter = ContactAdapter(this@ContactsFragment)
             }
         }
         checkPermission()
     }
 
 
+    private fun checkPermissions(): Boolean {
+        val permission1 = ContextCompat.checkSelfPermission(
+            requireContext(),
+            permissionReadContact
+        ) == PackageManager.PERMISSION_GRANTED
+        val permission2 = ContextCompat.checkSelfPermission(
+            requireContext(),
+            permissionWriteContact
+        ) == PackageManager.PERMISSION_GRANTED
+
+        return permission1 && permission2
+    }
+
+    private fun shouldShowRequestPermissionRationales(): Boolean {
+        val permission1 = ActivityCompat.shouldShowRequestPermissionRationale(
+            requireActivity(),
+            permissionReadContact
+        )
+        val permission2 = ActivityCompat.shouldShowRequestPermissionRationale(
+            requireActivity(),
+            permissionWriteContact
+        )
+
+        return permission1 && permission2
+    }
+
     private fun checkPermission() {
         when {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                permissionReadContact
-            ) == PackageManager.PERMISSION_GRANTED -> {
+            checkPermissions() -> {
                 readContacts()
             }
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                permissionReadContact
-            ) -> {
-                //TODO
+            shouldShowRequestPermissionRationales() -> {
+
             }
             else -> {
-                requestPermissionLauncher.launch(permissionReadContact)
+                requestPermissionsLauncher.launch(
+                    arrayOf(permissionReadContact, permissionWriteContact),
+                )
             }
         }
     }
@@ -132,6 +150,11 @@ class ContactsFragment : Fragment() {
     @SuppressLint("Range")
     private fun readContacts() {
         viewModel.getAll(requireContext().contentResolver)
+    }
+
+    override fun onClick(model: Contact, position: Int?) {
+        viewModel.deleteContact(requireContext().contentResolver, model.name)
+        position?.let { (binding.recycler.adapter as ContactAdapter).deleteItem(it) }
     }
 
 }
